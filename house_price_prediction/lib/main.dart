@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,35 +13,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ev Kira Tahmin Uygulaması',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Ev Kira Tahmin Uygulaması'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -48,68 +33,276 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  var chosenCounty = "null";
+  var isCountyChose = false;
+  final _formKey = GlobalKey<FormBuilderState>();
+  final ScrollController _firstController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        centerTitle: true,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      body: Scrollbar(
+        thickness: 10,
+        radius: const Radius.circular(10),
+        isAlwaysShown: true,
+        interactive: true,
+        controller: _firstController,
+        child: ListView(
+          controller: _firstController,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: DropdownButtonHideUnderline(
+                child: FormBuilderDropdown(
+                  name: 'county',
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide: BorderSide(color: Colors.blue)),
+                    labelText: 'İlçeyi seçiniz',
+                  ),
+                  // initialValue: counties[0],
+                  allowClear: true,
+                  isExpanded: true,
+                  onChanged: (value) {
+                    chosenCounty = value.toString();
+                    if (chosenCounty == "null") {
+                      isCountyChose = false;
+                    } else {
+                      isCountyChose = true;
+                    }
+                    setState(() {
+                      debugPrint(chosenCounty);
+                    });
+                  },
+                  // hint: const Text('İlçeyi seçiniz'),
+                  items: counties
+                      .map((value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          ))
+                      .toList(),
+                ),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const Divider(
+              thickness: 3,
+              color: Colors.blue,
+              indent: 0,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Visibility(
+                visible: isCountyChose,
+                child: FormBuilder(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 10),
+                      FormBuilderTextField(
+                        name: 'area',
+                        autovalidateMode: AutovalidateMode.always,
+                        initialValue: "100",
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Alan (\u33A1)',
+                        ),
+                        //           validator: FormFieldValidators.compose([
+                        //   FormBuilderValidators.required(context),
+                        //   FormBuilderValidators.numeric(context),
+                        //   FormBuilderValidators.max(context, 70),
+                        // ]),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderFilterChip(
+                        name: 'room_count',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // initialValue: [roomCounts[chosenCounty]![0]],
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Oda sayısı',
+                        ),
+                        options: roomCounts[chosenCounty]!
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderFilterChip(
+                        name: 'building_age',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // initialValue: [roomCounts[chosenCounty]![0]],
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Bina yaşı',
+                        ),
+                        options: buildingAges[chosenCounty]!
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderSlider(
+                        name: 'bath_count',
+                        min: 0.0,
+                        max: 5.0,
+                        initialValue: 1.0,
+                        divisions: 5,
+                        activeColor: Colors.blue[600],
+                        inactiveColor: Colors.blue[100],
+                        displayValues: DisplayValues.all,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Banyo sayısı',
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      DropdownButtonHideUnderline(
+                        child: FormBuilderDropdown(
+                          name: 'heating_type',
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(color: Colors.blue)),
+                            labelText: 'Isıtma tipi',
+                          ),
+                          // initialValue: 'Male',
+                          allowClear: true,
+                          // isExpanded: true,
+                          // hint: const Text('Choose something'),
+                          items: heatingTypes[chosenCounty]!
+                              .map((value) => DropdownMenuItem(
+                                    value: value,
+                                    child: Text(value),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderFilterChip(
+                        name: 'balcony',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Balkon durumu',
+                        ),
+                        options: ["Var", "Yok"]
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderFilterChip(
+                        name: 'ware',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Eşya durumu',
+                        ),
+                        options: ["Eşyalı", "Boş"]
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderFilterChip(
+                        name: 'site',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Site içerisinde',
+                        ),
+                        options: ["Evet", "Hayır"]
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
+                      ),
+                      // FormBuilderSwitch(
+                      //   name: "balcony",
+                      //   title: const Text("Balkon durumu"),
+                      //   decoration: const InputDecoration(
+                      //     border: OutlineInputBorder(
+                      //         borderRadius:
+                      //             BorderRadius.all(Radius.circular(10.0)),
+                      //         borderSide: BorderSide(color: Colors.blue)),
+                      //   ),
+                      // ),
+                      const SizedBox(
+                        height: 50,
+                        child: Center(child: Text("Tahmini kira: ----")),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          debugPrint('Received click');
+                          _formKey.currentState!.save();
+                          debugPrint(_formKey.currentState!.value.toString());
+                        },
+                        child: const Text('Predict House Price'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
