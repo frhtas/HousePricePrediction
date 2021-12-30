@@ -67,7 +67,7 @@ def get_data():
                     continue
 
                 # Eve ait bilgiler HOUSE'a teker teker eklenecek
-                HOUSE['Alan'] = int(detail_dict['Net Metrekare'].split()[0])
+                HOUSE['Alan'] = int(detail_dict['Net Metrekare'].split()[0].replace(".",""))
                 HOUSE['Oda Sayısı'] = detail_dict['Oda Sayısı']
                 HOUSE['Bina Yaşı'] = detail_dict['Binanın Yaşı']
                 HOUSE['Isıtma Tipi'] = detail_dict['Isıtma Tipi']
