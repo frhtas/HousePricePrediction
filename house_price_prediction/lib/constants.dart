@@ -254,6 +254,7 @@ final buildingAges = {
     "3",
     "1"
   ],
+  "null": ["1"]
 };
 
 final heatingTypes = {
@@ -341,5 +342,6 @@ final heatingTypes = {
     "Merkezi (Pay Ölçer)",
     "Sobalı",
     "Kat Kaloriferi"
-  ]
+  ],
+  "null": ["1"]
 };
