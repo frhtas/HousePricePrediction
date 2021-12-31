@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:house_price_prediction/service.dart';
 import 'constants.dart';
 
 void main() {
@@ -285,6 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           };
                           values.addAll(_formKey.currentState!.value);
                           debugPrint(values.toString());
+                          getPredictions(values);
                           var isError = false;
                           for (var key in values.keys) {
                             if (key == "area" && values[key] == "") {
