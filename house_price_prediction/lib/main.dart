@@ -188,27 +188,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      DropdownButtonHideUnderline(
-                        child: FormBuilderDropdown(
-                          name: 'heating_type',
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)),
-                                borderSide: BorderSide(color: Colors.blue)),
-                            labelText: 'Isıtma tipi',
-                          ),
-                          // initialValue: 'Male',
-                          allowClear: true,
-                          // isExpanded: true,
-                          // hint: const Text('Choose something'),
-                          items: heatingTypes[chosenCounty]!
-                              .map((value) => DropdownMenuItem(
-                                    value: value,
-                                    child: Text(value),
-                                  ))
-                              .toList(),
+                      FormBuilderFilterChip(
+                        name: 'heating_type',
+                        maxChips: 1,
+                        selectedColor: Colors.blue,
+                        // initialValue: [roomCounts[chosenCounty]![0]],
+                        // showCheckmark: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                          labelText: 'Isıtma tipi',
                         ),
+                        options: heatingTypes[chosenCounty]!
+                            .map((value) => FormBuilderFieldOption(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList(),
+                        alignment: WrapAlignment.spaceAround,
                       ),
                       const SizedBox(height: 20),
                       FormBuilderFilterChip(
@@ -273,16 +272,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             .toList(),
                         alignment: WrapAlignment.spaceAround,
                       ),
-                      // FormBuilderSwitch(
-                      //   name: "balcony",
-                      //   title: const Text("Balkon durumu"),
-                      //   decoration: const InputDecoration(
-                      //     border: OutlineInputBorder(
-                      //         borderRadius:
-                      //             BorderRadius.all(Radius.circular(10.0)),
-                      //         borderSide: BorderSide(color: Colors.blue)),
-                      //   ),
-                      // ),
                       const SizedBox(
                         height: 50,
                         child: Center(child: Text("Tahmini kira: ----")),
@@ -291,7 +280,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           debugPrint('Received click');
                           _formKey.currentState!.save();
-                          debugPrint(_formKey.currentState!.value.toString());
+                          Map<String, dynamic> values = {
+                            "county": chosenCounty
+                          };
+                          values.addAll(_formKey.currentState!.value);
+                          debugPrint(values.toString());
+                          var isError = false;
+                          for (var key in values.keys) {
+                            if (key == "area" && values[key] == "") {
+                              isError = true;
+                            } else if (key == "bath_count") {
+                            } else {
+                              if (values[key].isEmpty) {
+                                isError = true;
+                              }
+                            }
+                          }
+                          print(isError);
                         },
                         child: const Text('Predict House Price'),
                       ),
