@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:house_price_prediction/service.dart';
@@ -38,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var isCountyChose = false;
   final _formKey = GlobalKey<FormBuilderState>();
   final ScrollController _firstController = ScrollController();
+  String errorText = "";
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: DropdownButtonHideUnderline(
                 child: FormBuilderDropdown(
                   name: 'county',
+                  initialValue: chosenCounty == "null" ? null : chosenCounty,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -79,6 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     setState(() {
                       debugPrint(chosenCounty);
+                      if (_formKey.currentState != null) {
+                        _formKey.currentState!.reset();
+                      }
                     });
                   },
                   // hint: const Text('İlçeyi seçiniz'),
@@ -273,12 +280,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             .toList(),
                         alignment: WrapAlignment.spaceAround,
                       ),
-                      const SizedBox(
+                      SizedBox(
                         height: 50,
-                        child: Center(child: Text("Tahmini kira: ----")),
+                        child: Center(
+                            child: Text(
+                          errorText,
+                          style: const TextStyle(color: Colors.red),
+                        )),
                       ),
                       ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           debugPrint('Received click');
                           _formKey.currentState!.save();
                           Map<String, dynamic> values = {
@@ -286,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           };
                           values.addAll(_formKey.currentState!.value);
                           debugPrint(values.toString());
-                          getPredictions(values);
+
                           var isError = false;
                           for (var key in values.keys) {
                             if (key == "area" && values[key] == "") {
@@ -298,7 +309,72 @@ class _MyHomePageState extends State<MyHomePage> {
                               }
                             }
                           }
-                          print(isError);
+                          if (isError) {
+                            setState(() {
+                              errorText = "Lütfen tüm alanları doldurunuz!";
+                            });
+                          } else {
+                            errorText = "";
+                            String results = await getPredictions(values);
+                            if (results != "") {
+                              Map<String, dynamic> resultsJson =
+                                  json.decode(results);
+                              setState(() {});
+                              // show the dialog
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Center(
+                                      child: Text('Sonuçlar'),
+                                    ),
+                                    content: SingleChildScrollView(
+                                      child: DataTable(
+                                        columns: const <DataColumn>[
+                                          DataColumn(label: Text('Yöntem')),
+                                          DataColumn(
+                                              label: Text(
+                                            'Kira',
+                                            maxLines: 2,
+                                            softWrap: true,
+                                          )),
+                                        ],
+                                        rows: resultsJson.entries
+                                            .map((e) => DataRow(cells: [
+                                                  DataCell(Text(
+                                                    e.key.toString(),
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.blue[900]),
+                                                  )),
+                                                  DataCell(Text(
+                                                    "${e.value.toString()} ₺",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.blue[900]),
+                                                  )),
+                                                ]))
+                                            .toList(),
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Tamam'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              setState(() {
+                                errorText = "Bir hata oluştu!";
+                              });
+                            }
+                          }
                         },
                         child: const Text('Predict House Price'),
                       ),
