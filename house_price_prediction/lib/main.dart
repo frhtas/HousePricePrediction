@@ -317,58 +317,74 @@ class _MyHomePageState extends State<MyHomePage> {
                             errorText = "";
                             String results = await getPredictions(values);
                             if (results != "") {
-                              Map<String, dynamic> resultsJson =
-                                  json.decode(results);
+                              Map<String, dynamic> resultsJson = {};
+                              try {
+                                resultsJson = json.decode(results);
+                                resultsJson["Ortalama"] = (resultsJson.values
+                                            .reduce((a, b) => a + b) /
+                                        resultsJson.values.length)
+                                    .toInt();
+                              } on Exception {
+                                errorText = "Sunucuda bir hata oluştu!";
+                              }
                               setState(() {});
-                              // show the dialog
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Center(
-                                      child: Text('Sonuçlar'),
-                                    ),
-                                    content: SingleChildScrollView(
-                                      child: DataTable(
-                                        columns: const <DataColumn>[
-                                          DataColumn(label: Text('Yöntem')),
-                                          DataColumn(
-                                              label: Text(
-                                            'Kira',
-                                            maxLines: 2,
-                                            softWrap: true,
-                                          )),
-                                        ],
-                                        rows: resultsJson.entries
-                                            .map((e) => DataRow(cells: [
-                                                  DataCell(Text(
-                                                    e.key.toString(),
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colors.blue[900]),
-                                                  )),
-                                                  DataCell(Text(
-                                                    "${e.value.toString()} ₺",
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colors.blue[900]),
-                                                  )),
-                                                ]))
-                                            .toList(),
+                              if (errorText == "") {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Center(
+                                        child: Text('Sonuçlar'),
                                       ),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Tamam'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
+                                      content: SingleChildScrollView(
+                                        child: DataTable(
+                                          columns: const <DataColumn>[
+                                            DataColumn(label: Text('Yöntem')),
+                                            DataColumn(
+                                                label: Text(
+                                              'Kira',
+                                              maxLines: 2,
+                                              softWrap: true,
+                                            )),
+                                          ],
+                                          rows: resultsJson.entries
+                                              .map((e) => DataRow(cells: [
+                                                    DataCell(Text(
+                                                      e.key.toString(),
+                                                      style: TextStyle(
+                                                          color: e.key ==
+                                                                  "Ortalama"
+                                                              ? Colors.red[900]
+                                                              : Colors
+                                                                  .blue[900]),
+                                                    )),
+                                                    DataCell(Text(
+                                                      "${e.value.toString()} ₺",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: e.key ==
+                                                                  "Ortalama"
+                                                              ? Colors.red[900]
+                                                              : Colors
+                                                                  .blue[900]),
+                                                    )),
+                                                  ]))
+                                              .toList(),
+                                        ),
                                       ),
-                                    ],
-                                  );
-                                },
-                              );
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Tamam'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
                             } else {
                               setState(() {
                                 errorText = "Bir hata oluştu!";
@@ -376,7 +392,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             }
                           }
                         },
-                        child: const Text('Predict House Price'),
+                        child: const Text('Tahmin Et'),
                       ),
                     ],
                   ),

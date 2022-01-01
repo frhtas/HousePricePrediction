@@ -23,6 +23,8 @@ from sklearn.svm import SVR
 from sklearn.metrics import r2_score
 from sklearn.ensemble import RandomForestRegressor
 import sklearn.neighbors
+import warnings
+warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 
