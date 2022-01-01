@@ -27,6 +27,7 @@ import sklearn.neighbors
 app = Flask(__name__)
 
 
+## Kullanıcı girişinden gelen ilçe isimlerini veri seti formatına çevirir
 def removeTurkishChars(county):
     countyMap = {
         "Üsküdar": "uskudar",
@@ -42,6 +43,7 @@ def removeTurkishChars(county):
     }
     return countyMap[county]
 
+## Kullanıcı girişini makine öğrenmesi modeline input olarak verilecek formata getirir
 def prepareInput(inputValue, house):
     inputValue['Alan'][0] = int(house['area'])
     inputValue['Oda Sayısı'][0] = house['room_count']
@@ -68,13 +70,12 @@ def prepareInput(inputValue, house):
     return inputValue
 
 
+## Mobil uygulamadan gelen isteğe makine öğrenmesi modeli sonuçlarını döndürür
 @app.route('/getpredictions', methods=["POST"])
 def get_predictions():
     house = request.form
     county = removeTurkishChars(house["county"])
-    print(county)
     inputValue = pickle.load(open("DEFAULT_INPUTS", "rb"))[county]
-    print(inputValue)
     inputValue = prepareInput(inputValue, house)
 
     models = pickle.load(open("models/" + county, "rb"))
