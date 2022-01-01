@@ -1,28 +1,8 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import json
 from flask import Flask
 from flask import request
 import pickle
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import sklearn
-from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import StandardScaler
-from sklearn.feature_selection import RFE
-from sklearn.decomposition import PCA
-from sklearn.svm import SVR
-from sklearn.svm import LinearSVR
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.svm import SVR
-from sklearn.metrics import r2_score
-from sklearn.ensemble import RandomForestRegressor
-import sklearn.neighbors
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -91,6 +71,7 @@ def get_predictions():
         "SVR": int(SVRModel.predict(inputValue))
     }
     print(results)
+    print("--------------------------------------------------------------------------------------------------------")
     return results
     
 app.run()

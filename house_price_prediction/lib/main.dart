@@ -57,7 +57,6 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: _firstController,
         child: ListView(
           controller: _firstController,
-          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -71,7 +70,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderSide: BorderSide(color: Colors.blue)),
                     labelText: 'İlçeyi seçiniz',
                   ),
-                  // initialValue: counties[0],
                   allowClear: true,
                   isExpanded: true,
                   onChanged: (value) {
@@ -88,7 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                     });
                   },
-                  // hint: const Text('İlçeyi seçiniz'),
                   items: counties
                       .map((value) => DropdownMenuItem(
                             value: value,
@@ -126,11 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderSide: BorderSide(color: Colors.blue)),
                           labelText: 'Alan (\u33A1)',
                         ),
-                        //           validator: FormFieldValidators.compose([
-                        //   FormBuilderValidators.required(context),
-                        //   FormBuilderValidators.numeric(context),
-                        //   FormBuilderValidators.max(context, 70),
-                        // ]),
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 20),
@@ -138,8 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'room_count',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // initialValue: [roomCounts[chosenCounty]![0]],
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -160,8 +150,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'building_age',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // initialValue: [roomCounts[chosenCounty]![0]],
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -200,8 +188,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'heating_type',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // initialValue: [roomCounts[chosenCounty]![0]],
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -222,7 +208,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'balcony',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -243,7 +228,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'ware',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -264,7 +248,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         name: 'site',
                         maxChips: 1,
                         selectedColor: Colors.blue,
-                        // showCheckmark: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:

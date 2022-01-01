@@ -23,7 +23,7 @@ def get_data():
             html_content = response.content
             soup = BeautifulSoup(html_content, "html.parser")
 
-            # İstanbul-Beşiktaş'ta bulunan evlerin detaylı özelliklerine erişmek için url'ler alınacak
+            # ilce'de bulunan evlerin detaylı özelliklerine erişmek için url'ler alınacak
             house_urls = soup.find_all("div", {"class": "styles_listingItem__1asTK"})
             
             # Evlere ait url'ler birer birer gezilerek istenen veriler döngü içinde alınacak
@@ -54,7 +54,7 @@ def get_data():
                 
                 flag = 0
                 for i in col:
-                    if not i in detail_dict.keys(): # Eğer alınmak istenen bilgi yoksa flag = 1 yapılırak bir sonraki eve geçilecek
+                    if not i in detail_dict.keys(): # Eğer alınmak istenen bilgi yoksa flag = 1 yapılarak bir sonraki eve geçilecek
                         if i == "Balkon Durumu":
                             detail_dict["Balkon Durumu"] = "Yok"
                             continue
