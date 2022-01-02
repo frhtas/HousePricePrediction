@@ -1,2 +1,4 @@
-# HousePricePrediction
- House Price Prediction with ML algorithms.
+# Makine Öğrenmesi ile Ev Kira Tahmini Yapan Uzman Sistem
+**Proje Konusu:** Çeşitli ML Algoritmalarını Deneyerek Ev Kiralarını En Başarılı Şekilde Tahmin Eden Uzman Sistem Geliştirmek
+
+**Proje Özeti:** Projenin temel amacı İstanbul’un 10 ilçesinde (Esenyurt, Beşiktaş, Pendik, Küçükçekmece, Bahçelievler, Üsküdar, Kadıköy, Sarıyer, Bakırköy, Şişli) bulunan ev kiralarını başarılı bir şekilde tahmin eden bir uzman sistem geliştirmektir. Bu kapsamda projede çeşitli Makine Öğrenmesi algoritmalarıyla modeller oluşturulup ev kiralarını tahmin eden modellerin oluşturulması hedeflenmektedir. Daha sonra bir mobil uygulama geliştirilerek ve makine öğrenmesinden elde edilen modeller kullanılarak kullanıcının girdi verip çıktı olarak ev kira tahminini alması sağlanacaktır. Böylelikle hem ev kiralarını tahmin eden bir uzman sistem (bir nevi cebimizdeki emlakçı) geliştirilecek, hem de hangi Makine Öğrenmesi algoritmasının bu konuda daha başarılı olduğu tespit edilecektir.
